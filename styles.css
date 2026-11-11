@@ -347,6 +347,106 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
 }
 .stat dd { margin: 4px 0 0; color: var(--muted); font-size: 14px; line-height: 1.45; max-width: 220px; }
 
+/* ===========================================================
+   Hero portrait — day/night
+   =========================================================== */
+@property --portrait-glow { syntax: "<color>"; inherits: true; initial-value: rgba(110, 168, 255, .45); }
+@property --portrait-glow-2 { syntax: "<color>"; inherits: true; initial-value: rgba(79, 70, 229, .18); }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 400px);
+  gap: 64px;
+  align-items: center;
+}
+.hero-copy { grid-column: 1; grid-row: 1; min-width: 0; }
+.hero-grid .hero-title { font-size: clamp(56px, 8.6vw, 108px); }
+
+.portrait {
+  --dur: 1.25s;
+  --wipe: cubic-bezier(.65, 0, .25, 1);
+  --portrait-glow: rgba(110, 168, 255, .45);
+  --portrait-glow-2: rgba(79, 70, 229, .16);
+  grid-column: 2; grid-row: 1;
+  position: relative;
+  margin: 0;
+  perspective: 1000px;
+  transition: --portrait-glow var(--dur) var(--wipe), --portrait-glow-2 var(--dur) var(--wipe);
+}
+:root:not([data-theme="light"]) .portrait {
+  --portrait-glow: rgba(255, 184, 108, .28);
+  --portrait-glow-2: rgba(139, 147, 255, .26);
+}
+
+/* ambient light that spills from the photo into the page */
+.portrait::before {
+  content: "";
+  position: absolute; inset: 6% -14% 4% -14%;
+  z-index: -1;
+  background:
+    radial-gradient(closest-side at 50% 32%, var(--portrait-glow), transparent),
+    radial-gradient(closest-side at 50% 78%, var(--portrait-glow-2), transparent);
+  filter: blur(36px);
+  pointer-events: none;
+}
+
+/* offset hairline arch — architectural echo of the frame */
+.portrait::after {
+  content: "";
+  position: absolute; inset: -14px 14px 14px -14px;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  border-radius: 24px;
+  -webkit-mask-image: linear-gradient(#000 60%, transparent 100%);
+          mask-image: linear-gradient(#000 60%, transparent 100%);
+  pointer-events: none;
+  transition: border-color var(--dur) var(--wipe);
+}
+
+.portrait-frame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--bg-2);
+  /* dissolve the lower body into the page */
+  -webkit-mask-image: linear-gradient(#000 72%, rgba(0, 0, 0, .7) 88%, transparent 100%);
+          mask-image: linear-gradient(#000 72%, rgba(0, 0, 0, .7) 88%, transparent 100%);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .6s var(--ease);
+  will-change: transform;
+}
+
+.shot, .shot img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+}
+.shot img {
+  object-fit: cover;
+  object-position: 50% 42%;
+  transform: translate(var(--px, 0px), var(--py, 0px)) scale(1.45);
+  transform-origin: 55% 95%; /* zoom toward the subject, keeping a little room at the bottom for parallax */
+  transition: transform .8s var(--ease);
+}
+
+/* Night fades in over day */
+.shot.night {
+  opacity: 0;
+  transition: opacity .9s ease;
+}
+:root:not([data-theme="light"]) .shot.night { opacity: 1; }
+
+/* cool the hazy night sky so it melts into the dark page */
+.shot.night::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(rgba(10, 11, 15, .6), rgba(10, 11, 15, .2) 38%, transparent 58%);
+  pointer-events: none;
+}
+
+:root[data-theme="wizard"] .hero-grid { text-align: left; }
+
 /* Wizard hero */
 :root[data-theme="wizard"] .hero { text-align: center; padding-top: 110px; }
 :root[data-theme="wizard"] .eyebrow {
@@ -629,6 +729,14 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
   .projects { grid-template-columns: 1fr; }
   .beyond { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(240px, 320px); gap: 40px; }
+}
+@media (max-width: 760px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .eyebrow { white-space: normal; }
+  .portrait { grid-column: 1; grid-row: 1; width: min(62vw, 270px); margin-left: 14px; }
+  .hero-copy { grid-row: 2; }
+  .portrait::before { inset: 6% -8% 4% -8%; }
 }
 @media (max-width: 760px) {
   .nav { display: none; }

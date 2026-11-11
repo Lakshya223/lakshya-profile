@@ -43,6 +43,30 @@
     }
   });
 
+  /* ---------------- Portrait: subtle tilt ---------------- */
+  const portrait = document.querySelector('.portrait');
+  const frame = portrait && portrait.querySelector('.portrait-frame');
+
+  if (frame && !reducedMotion && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let tiltRaf;
+    portrait.addEventListener('pointermove', e => {
+      const r = portrait.getBoundingClientRect();
+      const nx = (e.clientX - r.left) / r.width - .5;   // -0.5 … 0.5
+      const ny = (e.clientY - r.top) / r.height - .5;
+      cancelAnimationFrame(tiltRaf);
+      tiltRaf = requestAnimationFrame(() => {
+        frame.style.setProperty('--ry', (nx * 6).toFixed(2) + 'deg');
+        frame.style.setProperty('--rx', (-ny * 5).toFixed(2) + 'deg');
+        frame.style.setProperty('--px', (-nx * 10).toFixed(1) + 'px');
+        frame.style.setProperty('--py', (-ny * 8).toFixed(1) + 'px');
+      });
+    });
+    portrait.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(tiltRaf);
+      ['--rx', '--ry', '--px', '--py'].forEach(p => frame.style.removeProperty(p));
+    });
+  }
+
   /* ---------------- Toast ---------------- */
   const toastEl = document.getElementById('toast');
   let toastTimer;
