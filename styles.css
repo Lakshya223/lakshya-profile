@@ -283,13 +283,27 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
 .hero { padding: 96px 0 56px; }
 .eyebrow {
   display: inline-flex; align-items: center;
-  margin: 0 0 28px;
+  margin: 24px 0 0;
   padding: 6px 14px;
   font-size: 14px;
   color: var(--muted);
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--bg-2);
+}
+.eyebrow .pro { display: inline-flex; align-items: center; }
+.crown {
+  display: inline-block; flex: none;
+  width: 1.25em; height: 1.09em; margin-right: 9px;
+  background-color: #012169;
+  -webkit-mask: url("assets/columbia-crown.png") center / contain no-repeat;
+          mask: url("assets/columbia-crown.png") center / contain no-repeat;
+}
+:root[data-theme="dark"] .crown { background-color: #9bcbeb; }
+.crown-badge {
+  flex: none; display: block;
+  width: 22px; height: 22px; margin: 0 7px;
+  border-radius: 50%;
 }
 .pulse {
   display: inline-block; width: 8px; height: 8px; margin-right: 10px;
@@ -304,7 +318,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
   font-family: var(--font-head);
   font-size: clamp(56px, 11vw, 132px);
   line-height: .92;
-  letter-spacing: -.05em;
+  letter-spacing: -.02em;
   font-weight: 700;
 }
 .hero-title .pro {
@@ -312,7 +326,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
   -webkit-background-clip: text; background-clip: text;
   color: transparent;
 }
-.hero-sub { max-width: 640px; margin: 28px 0 18px; font-size: clamp(18px, 2.2vw, 22px); color: var(--muted); }
+.hero-sub { max-width: 640px; margin: 28px 0 18px; font-size: clamp(16px, 2vw, 19px); color: var(--muted); }
 .hero-sub em { font-weight: 500; }
 .hero-roles { font-size: 15px; color: var(--accent); min-height: 1.6em; }
 .caret { animation: blink 1s steps(1) infinite; margin-left: 2px; }
@@ -360,7 +374,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
   align-items: center;
 }
 .hero-copy { grid-column: 1; grid-row: 1; min-width: 0; }
-.hero-grid .hero-title { font-size: clamp(56px, 8.6vw, 108px); }
+.hero-grid .hero-title { font-size: clamp(48px, 7.2vw, 90px); }
 
 .portrait {
   --dur: 1.25s;
