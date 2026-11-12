@@ -79,19 +79,23 @@
 
   /* ---------------- Typewriter ---------------- */
   const ROLES = {
-    pro: ['AI/ML Engineer', 'Agentic systems builder', 'Data Scientist', 'LLM evaluation nerd', 'Forecasting + MLOps'],
+    pro: ['Data Scientist', 'AI / ML Engineer', 'Master’s Student'],
     wiz: ['Summoner of agents', 'Brewer of forecasts', 'Keeper of pipelines', 'Breaker of baselines', 'Apprentice of the Arcane Data Arts'],
   };
   const typer = document.getElementById('typer');
+  const typerArticle = document.getElementById('typer-article');
+  const articleFor = w => (/^(AI|LLM|[aeiou])/i.test(w) ? 'an' : 'a');
   let typerTimer;
 
   function restartTyper() {
     clearTimeout(typerTimer);
     const list = root.dataset.theme === 'wizard' ? ROLES.wiz : ROLES.pro;
+    if (typerArticle) typerArticle.textContent = articleFor(list[0]);
     if (reducedMotion) { typer.textContent = list[0]; return; }
     let i = 0, j = 0, deleting = false;
     (function tick() {
       const word = list[i];
+      if (j === 0 && !deleting && typerArticle) typerArticle.textContent = articleFor(word);
       j += deleting ? -1 : 1;
       typer.textContent = word.slice(0, j);
       let delay = deleting ? 35 : 70;
